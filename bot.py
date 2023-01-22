@@ -12,7 +12,7 @@ with open('config.json', 'r') as fcc_file:
 tok = cfg[0]
 print(tok.get('apikey'))
 TOKEN = tok.get('apikey')
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(TOKEN, skip_pending=True)
 
 #list of stickers ID
 s_dir =\
@@ -196,9 +196,7 @@ def ending(message,messageedit):
 
             bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
             time.sleep(.4)
-
-@bot.message_handler(commands=['start']) 
-def start(message):
+def init_buttons():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton('Тык❤️')
     item2 = types.KeyboardButton('✨')
@@ -206,9 +204,16 @@ def start(message):
     item4 = types.KeyboardButton('I LOVE U 💖')
     markup.add(item4, item2, item3)
     markup.add(item1)
+    return markup
+
+
+
+@bot.message_handler(commands=['start']) 
+def start(message):
+    print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - NEW USER")
     bot.send_message(message.chat.id,
                      'И снова Привет, {0.first_name}! Я восстал из мертвых(Ботик) и опять буду работать не обещаю, что бесперебойно. НО! я буду стараться ❤️\n функционал я весь забыл потомму что мой программист не сохранял копии проекта, но обещает все восстановить)))'.format(
-                         message.from_user), reply_markup=markup) # /start message
+                         message.from_user), reply_markup=init_buttons()) # /start message
 
 
 
@@ -221,6 +226,7 @@ def bot_message(message):
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - {show_wat_show(r)}") # console output for tracking clicks [username:user_id] - time - event
             bot.send_message(message.chat.id, dic[int(r)]) # send meassage
             bot.send_sticker(message.chat.id, sticker = s_dir[int(r)]) #send sticker
+
         if message.text == '❤️❤️❤️':
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ❤️❤️❤️")
             messageedit = bot.send_message(message.chat.id, f"❤️❤️❤️")
@@ -325,6 +331,7 @@ def bot_message(message):
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
                     time.sleep(.4)
 
+            
 
         if message.text == '✨':
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ✨")
@@ -362,7 +369,8 @@ def bot_message(message):
                     print(ex)
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
                     time.sleep(.5)
-            ending()
+            ending(message,messageedit)
+
         if message.text == 'I LOVE U 💖':
             messageedit = bot.send_message(message.chat.id, f"I LOVE U 💖")
             t = datetime.now()
