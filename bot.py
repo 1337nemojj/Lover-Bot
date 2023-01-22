@@ -14,13 +14,7 @@ print(tok.get('apikey'))
 TOKEN = tok.get('apikey')
 bot = telebot.TeleBot(TOKEN)
 
-
-#bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id, text="тру-ту-ту", reply_markup=key )
-#edit massage telebot
-
-# messagetoedit = bot.send_message(message.chat.id, 'Текст')
-# bot.edit_message_text(chat_id=message.chat.id, message_id=messagetoedit.message_id, text=f"Новый текст")
-
+#list of stickers ID
 s_dir =\
     {1: "CAACAgIAAxkBAAEGcoljdS_imWaz72H-jp74TiZwTqfTeQACQQcAAlwCZQM3_GOaGamGFSsE",
      2: "CAACAgIAAxkBAAEGcmxjdS8GPGA4oWrenK7N160YI_fxZgACwAwAAvM0QEuBFItlPbqOtisE",
@@ -79,7 +73,7 @@ s_dir =\
      55:'CAACAgIAAxkBAAEGdihjd2YpkRhVDDt3SuNKrIb0G3wwFAACjxoAAs4hUUkCWbjzwMXmCCsE',
      
      }
-
+#list of messages
 dic = \
     {1: "Ты обворожительна!",
      2: "Ты будто сошла со страниц красивой сказки!",
@@ -203,7 +197,7 @@ def ending(message,messageedit):
             bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
             time.sleep(.4)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start']) 
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton('Тык❤️')
@@ -214,7 +208,7 @@ def start(message):
     markup.add(item1)
     bot.send_message(message.chat.id,
                      'И снова Привет, {0.first_name}! Я восстал из мертвых(Ботик) и опять буду работать не обещаю, что бесперебойно. НО! я буду стараться ❤️\n функционал я весь забыл потомму что мой программист не сохранял копии проекта, но обещает все восстановить)))'.format(
-                         message.from_user), reply_markup=markup)
+                         message.from_user), reply_markup=markup) # /start message
 
 
 
@@ -222,11 +216,11 @@ def start(message):
 def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Тык❤️':
-            r = random.randint(1, 55)
+            r = random.randint(1, 55) # select random message
             
-            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - {show_wat_show(r)}")
-            bot.send_message(message.chat.id, dic[int(r)])
-            bot.send_sticker(message.chat.id, sticker = s_dir[int(r)])
+            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - {show_wat_show(r)}") # console output for tracking clicks [username:user_id] - time - event
+            bot.send_message(message.chat.id, dic[int(r)]) # send meassage
+            bot.send_sticker(message.chat.id, sticker = s_dir[int(r)]) #send sticker
         if message.text == '❤️❤️❤️':
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ❤️❤️❤️")
             messageedit = bot.send_message(message.chat.id, f"❤️❤️❤️")
@@ -256,10 +250,10 @@ def bot_message(message):
 
             frame_8 = frame_1.replace("❤️", "🤎")
 
-            # Ассортимент сердец
+            # hearts
             heart_assortment = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤎"]
 
-            # Рандомные фреймы
+            # random frames
             frame_9 = "".join(
                 list(map(lambda x: "\n" if x == "\n" else random.choice(heart_assortment) if x != "🤍" else "🤍", frame_8)))
 
@@ -275,10 +269,10 @@ def bot_message(message):
             frame_13 = "".join(
                 list(map(lambda x: "\n" if x == "\n" else random.choice(heart_assortment) if x != "🤍" else "🤍", frame_8)))
 
-            # Объединяем все фреймы в список
+            # add frames to list
             frames_to_print = [frame_1, frame_2, frame_3, frame_4, frame_5, frame_6, frame_7, frame_8, frame_9, frame_10, frame_11, frame_12, frame_13, frame_1]
 
-            # Отображаем все фреймы
+            # show all frames
             for frame in frames_to_print:
 
                 try:
@@ -290,35 +284,35 @@ def bot_message(message):
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
                     time.sleep(.4)
 
-            # Заполняем фон красными сердцами
+            # change background to red hearts
             while frame_1.find("🤍") != -1:
 
                 try:
-                    # Реплейсим одно белое на красное
+                    # replace on red
                     frame_1 = frame_1.replace("🤍", "❤️", 1)
-                    # Отображаем
+                    # output
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame_1)
                     time.sleep(.1)
 
                 except Exception as ex:
                     time.sleep(0.4)
 
-                    # Отображаем
+                    # output
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame_1)
                     time.sleep(.1)
 
-            # Список строк фрейма
+            # list of frames
             heart_rows_list = frame_1.split("\n")
-            # Обрезаем строки, пока не останется один символ (8 итераций)
+            # 8 iteration
             for _ in range(8):
-                # Удаляется нижняя строка
+                # del down string
                 del heart_rows_list[len(heart_rows_list) - 1]
 
-                # Удаляется по одному последнему символу из строк
+                # del one symbol
                 for i in range(len(heart_rows_list)):
                     heart_rows_list[i] = heart_rows_list[i][:-2]
 
-                # Отображаем фрейм
+                # output frame
                 try:
                     frame = "\n".join(heart_rows_list)
 
@@ -334,7 +328,7 @@ def bot_message(message):
 
         if message.text == '✨':
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ✨")
-            # Фреймы
+            # frames
             frame_1 = """✨💎💎✨💎💎✨
 💎💎💎💎💎💎💎
 💎💎💎💎💎💎💎
@@ -352,12 +346,10 @@ def bot_message(message):
             frame_8 = frame_1.replace("💎", "💖").replace("✨", "🍀")
             frame_9 = frame_1.replace("💎", "🐼").replace("✨", "🌴")
 
-            # Объединяем все фреймы в список
+            # add frames to list
             frames = [frame_1, frame_2, frame_3, frame_4, frame_5, frame_6, frame_7, frame_8, frame_9]
 
-            # Отображаем каждый фрейм
-            # messageedit = bot.send_message(message.chat.id, 'Текст')
-            # bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=f"Новый текст")
+            # show each frame
             messageedit = bot.send_message(message.chat.id, f"✨")
             for frame in frames:
                 
@@ -375,7 +367,7 @@ def bot_message(message):
             messageedit = bot.send_message(message.chat.id, f"I LOVE U 💖")
             t = datetime.now()
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - I LOVE U 💖")
-            # Фреймы анимации
+            # animation frames
             first_frame = """✨✨✨✨✨✨✨✨✨✨✨
 ✨✨✨✨✨✨✨✨✨✨✨
 ✨✨✨✨✨✨✨✨✨✨✨
@@ -484,10 +476,10 @@ def bot_message(message):
 🌃🌃🌃❤️❤️❤️❤️❤️🌃🌃🌃
 🌃🌃🌃🌃🌃🌃🌃🌃🌃🌃🌃"""
 
-            # Объединяем фреймы в один список
+            # add frames to list
             frames = [first_frame, i_frame, second_frame, third_frame, fourth_frame, fifth_frame, sixth_frame, seventh_frame, eighth_frame]
 
-            # Выводим каждый фрейм с к/д в 0.7 сек
+            # output frames per 0.7 sec
             for frame in frames:
 
                 try:
