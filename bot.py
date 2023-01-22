@@ -130,6 +130,7 @@ dic = \
      46:'ТЕБЕ ВЫПАЛ СУПЕР ПОДКАТ💖\nПо шкале от 1 до 10 ты выглядишь на 20!',
      47:'ТЕБЕ ВЫПАЛ СУПЕР ПОДКАТ💖\nТвои глаза! Хочу в них утонуть… Когда ты смотришь на меня, я забываю, что умею плавать!',
      48:'ТЕБЕ ВЫПАЛ СУПЕР ПОДКАТ💖\nХочу признаться, лишь тебе: ты самая-самая лучшая на этой Земле!',
+     
      49:'ТЕБЕ ВЫПАЛ МЕГА-СУПЕР ПОДКАТ!!!💖💖💖\nВстреча с тобой, Булочка, это необыкновенный подарок судьбы! Ты мой ангел и сокровище. Только с тобой я чувствую себя самым счастливым, ты вдохновляешь меня!',
      50:'ТЕБЕ ВЫПАЛ МЕГА-СУПЕР ПОДКАТ!!!💖💖💖\nЮночка, мне кажется, я заслужил премию и теперь точно разбогатею! Столько лет все мучаются вопросом, в чем смысл жизни, и никто до сих пор не нашел ответа. А я все знаю: для меня и ответ, и смысл жизни — это ты, моя Булочка!',
      51:'ТЕБЕ ВЫПАЛ МЕГА-СУПЕР ПОДКАТ!!!💖💖💖\nЯ бы стал котом, чтобы провести с тобой девять жизней.(твой котя)',
@@ -140,6 +141,68 @@ dic = \
      
      }
 
+def cur_time():
+    t = datetime.now()
+    
+    return t.strftime("%m/%d/%Y, %H:%M:%S")
+
+
+def show_wat_show(n):
+    if 0 < n < 41:
+        return "common"
+    elif 40 < n < 49:
+        return "rare"
+    else:
+        return "mega rare"
+
+def ending(message,messageedit):
+    frame_1 = """🤍🤍🤍🤍🤍🤍🤍🤍🤍
+🤍🤍❤️❤️🤍❤️❤️🤍🤍
+🤍❤️❤️❤️❤️❤️❤️❤️🤍
+🤍❤️❤️❤️❤️❤️❤️❤️🤍
+🤍❤️❤️❤️❤️❤️❤️❤️🤍
+🤍🤍❤️❤️❤️❤️❤️🤍🤍
+🤍🤍🤍❤️❤️❤️🤍🤍🤍
+🤍🤍🤍🤍❤️🤍🤍🤍🤍
+🤍🤍🤍🤍🤍🤍🤍🤍🤍"""
+    while frame_1.find("🤍") != -1:
+        try:
+            # Реплейсим одно белое на красное
+            frame_1 = frame_1.replace("🤍", "❤️", 1)
+            # Отображаем
+            bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame_1)
+            time.sleep(.1)
+
+        except Exception as ex:
+            time.sleep(0.4)
+
+            # Отображаем
+            bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame_1)
+            time.sleep(.1)
+
+    heart_rows_list = frame_1.split("\n")
+    # Обрезаем строки, пока не останется один символ (8 итераций)
+    for _ in range(8):
+        # Удаляется нижняя строка
+        del heart_rows_list[len(heart_rows_list) - 1]
+
+        # Удаляется по одному последнему символу из строк
+        for i in range(len(heart_rows_list)):
+            heart_rows_list[i] = heart_rows_list[i][:-2]
+
+        # Отображаем фрейм
+        try:
+            frame = "\n".join(heart_rows_list)
+
+            bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
+            time.sleep(.4)
+
+        except Exception as ex:
+            print(ex)
+
+            bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
+            time.sleep(.4)
+
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -147,8 +210,8 @@ def start(message):
     item2 = types.KeyboardButton('✨')
     item3 = types.KeyboardButton('❤️❤️❤️')
     item4 = types.KeyboardButton('I LOVE U 💖')
-    markup.add(item1, item2, item3)
-    markup.add(item4)
+    markup.add(item4, item2, item3)
+    markup.add(item1)
     bot.send_message(message.chat.id,
                      'И снова Привет, {0.first_name}! Я восстал из мертвых(Ботик) и опять буду работать не обещаю, что бесперебойно. НО! я буду стараться ❤️\n функционал я весь забыл потомму что мой программист не сохранял копии проекта, но обещает все восстановить)))'.format(
                          message.from_user), reply_markup=markup)
@@ -159,14 +222,13 @@ def start(message):
 def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Тык❤️':
-            t = datetime.now()
-            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {t}")
             r = random.randint(1, 55)
+            
+            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - {show_wat_show(r)}")
             bot.send_message(message.chat.id, dic[int(r)])
             bot.send_sticker(message.chat.id, sticker = s_dir[int(r)])
         if message.text == '❤️❤️❤️':
-            t = datetime.now()
-            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {t} - ❤️❤️❤️")
+            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ❤️❤️❤️")
             messageedit = bot.send_message(message.chat.id, f"❤️❤️❤️")
 
 
@@ -271,8 +333,7 @@ def bot_message(message):
 
 
         if message.text == '✨':
-            t = datetime.now()
-            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {t} - ✨")
+            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ✨")
             # Фреймы
             frame_1 = """✨💎💎✨💎💎✨
 💎💎💎💎💎💎💎
@@ -309,10 +370,11 @@ def bot_message(message):
                     print(ex)
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
                     time.sleep(.5)
+            ending()
         if message.text == 'I LOVE U 💖':
             messageedit = bot.send_message(message.chat.id, f"I LOVE U 💖")
             t = datetime.now()
-            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {t} - I LOVE U 💖")
+            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - I LOVE U 💖")
             # Фреймы анимации
             first_frame = """✨✨✨✨✨✨✨✨✨✨✨
 ✨✨✨✨✨✨✨✨✨✨✨
@@ -437,7 +499,8 @@ def bot_message(message):
                     print(ex)
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
                     time.sleep(.7)
-
+            bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=f"❤️")
+            ending(message,messageedit)
 
             
 bot.polling()
