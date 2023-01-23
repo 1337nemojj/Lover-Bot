@@ -137,9 +137,7 @@ dic = \
 
 def cur_time():
     t = datetime.now()
-    
     return t.strftime("%m/%d/%Y, %H:%M:%S")
-
 
 def show_wat_show(n):
     if 0 < n < 41:
@@ -196,6 +194,7 @@ def ending(message,messageedit):
 
             bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
             time.sleep(.4)
+
 def init_buttons():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton('Тык❤️')
@@ -216,16 +215,32 @@ def start(message):
                          message.from_user), reply_markup=init_buttons()) # /start message
 
 
+def get_img(filename):
+    img = open(f"{filename}.jpg", 'rb')
+    return img
 
 @bot.message_handler(content_types=['text'])
 def bot_message(message):
     if message.chat.type == 'private':
         if message.text == 'Тык❤️':
-            r = random.randint(1, 55) # select random message
-            
-            print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - {show_wat_show(r)}") # console output for tracking clicks [username:user_id] - time - event
-            bot.send_message(message.chat.id, dic[int(r)]) # send meassage
-            bot.send_sticker(message.chat.id, sticker = s_dir[int(r)]) #send sticker
+            r = random.randint(1, 56) # select random message
+            if r == 56:
+                print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - Love story")
+                bot.send_message(message.chat.id, "❤️ chance get this message 1.78% ❤️")
+                time.sleep(0.8)
+                for i in range(1,5):
+                    try:
+                        bot.send_message(message.chat.id, f"{i} ❤️")
+                        bot.send_photo(message.chat.id, get_img(f"love_story/{i}"))
+                        time.sleep(1.8)
+                    except Exception as e:
+                        print(e)
+                bot.send_message(message.chat.id, "❤️ that's all kiss u :) ❤️")
+            else:    
+                print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - {show_wat_show(r)}") # console output for tracking clicks [username:user_id] - time - event
+                bot.send_message(message.chat.id, dic[int(r)]) # send meassage
+                bot.send_sticker(message.chat.id, sticker = s_dir[int(r)]) #send sticker
+
 
         if message.text == '❤️❤️❤️':
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ❤️❤️❤️")
@@ -330,9 +345,7 @@ def bot_message(message):
 
                     bot.edit_message_text(chat_id=message.chat.id, message_id=messageedit.message_id, text=frame)
                     time.sleep(.4)
-
             
-
         if message.text == '✨':
             print(f"[{message.from_user.first_name}:{message.from_user.id}] - {cur_time()} - ✨")
             # frames
